@@ -31,9 +31,43 @@ Ch4 - File and Directories
 	Sticky bit, 具有 sticky bit 屬性的該”目錄”下的檔案，其檔案或目錄只有檔案擁有者及 root 才有權力刪除.
 		- SUID, SGID, Sticky bit 的設定方法：4 為 SUID, 2 為 SGID, 1 為 Sticky bit, such as chmod 4755 filename
 	
-	i-node, describe meta information about a file
+	block, 紀錄「檔案內容資料」的area.
+	
+	i-node, describe meta information about a file, 紀錄「該檔案的屬性、及該檔案放置在哪一個Block之內」的資訊
 		- including type, permission, data blocks, timestamps, reference counts, etc.
 		- 0, reserved or does not exist; 1, list of bad blocks; 2, root directory of a partition
+	
+	檔案的讀取方式為：
+		- 	先由一層一層的目錄取得檔案相關的關連資料，
+			再到對應的 inode 取得檔案的屬性，以及檔案內容資料所在的 Block，
+			最後到 Block area 取得檔案的資料。
+	
+	hard link:
+		- 	假設我的 /root/crontab 為一個 hard link 的檔案，
+			他連結到 /etc/crontab 這個檔案，也就是說，
+			其實 /root/crontab 與 /etc/crontab 是同一個檔案，
+			只是有兩個目錄( /etc 與 /root )記錄了 crontab 這個檔案的關連資料。
+		-	使用 hard link 設定連結檔時，磁碟的空間與 inode 的數目都不會改變
+		-	hard link 只是在某個目錄下的 block 多寫入一個關連資料
+		-	hard link 是在同一個 partition 上面進行資料關連的建立
+		-	不能跨 Filesystem、不能 link 目錄
+		
+	soft link(symbolic link)
+		-	Symbolic link 就是在建立一個獨立的檔案，而這個檔案會讓資料的讀取指向他 link 的那個檔案內容。
+		-	當來源檔被刪除之後，symbolic link 的檔案會『開不了』
+		-	Symbolic link 所建立的檔案為一個獨立的新的檔案，所以會佔用掉 inode 與 block
+		- 	int symlink(const char *actualpath, const char *sympath); returns: 0 if OK, -1 on error
+		-	ssize_t readlink(const char *path, char *buf, size_t bufsize); returns: number of bytes placed in the buffer, -1 on error
+	
+	reference counts, the number of pointers that points to an i-node,
+		- usually a newly created file has a reference count of 1
+		- a reference count increases on being link(2), such as create a hard-link
+		- a reference count decreases on being unlink(2)
+	
+	Device Special Files,
+		-	major device number, identifies the device driver
+		-	minor device number, identifies the specific sub device
+	
 Ch6 - System Data Files and Infromation
 Ch7 - Process Environment
 Ch8 - Process Control
