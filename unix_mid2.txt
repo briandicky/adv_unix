@@ -69,6 +69,7 @@ Ch4 - File and Directories
 		-	minor device number, identifies the specific sub device
 	
 Ch6 - System Data Files and Infromation
+
 Ch7 - Process Environment
 Ch8 - Process Control
 Ch9 - Process Relationships
