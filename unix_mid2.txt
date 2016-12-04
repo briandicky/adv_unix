@@ -1,0 +1,40 @@
+Ch4 - File and Directories
+	working directory - also called current working directory, can be changed using chdir(2) function.
+	home directory - the initial working directory when a user logged in, which is obtained form the /etc/passwd file.
+	
+	Return information about a file,
+		stat and lstat are basically same, except lstat does not follow a symbolic link, it returns the information of the symbolic link itself.
+		fstat - do the same thing for an opened file.
+	
+	UID, real user ID, taken form the password file when login
+	EUID, effective user ID, used for file access permission checks
+	SUID, saved set-user-ID, saved by the exec funtion, the effective user ID when a program is executed
+	
+	File access permission, a file is always associated with a user ID(the owner) and a group ID.
+		- 9-bit permission, such as -rwxr-xr-x
+		- file access test procedence, EUID == 0 ? -> EUID is same? -> EGID is same? -> other access permission bits is set?
+	
+	access(2), check accessibility of a file,
+		- int access(const char *path, int mode); returns: 0 if OK, -1 on error
+		- mode can be the bitwise, R_OK, W_OK, X_OK
+		- F_OK, test for the exitence of the file
+		
+	umask(2), set the file mode creation mask for the process,
+		- mode_t umask(mode_t, cmask); returns previous file mode creation mask
+		
+	File mode, such as chmod & fchmod
+		- int chmod(const char *path, mode_t mode);
+	
+	File ownership, such as chown & fchown & lchown
+		- int chown(const char *path, uid_t owner, gid_t group);
+		
+	Sticky bit, 具有 sticky bit 屬性的該”目錄”下的檔案，其檔案或目錄只有檔案擁有者及 root 才有權力刪除.
+		- SUID, SGID, Sticky bit 的設定方法：4 為 SUID, 2 為 SGID, 1 為 Sticky bit, such as chmod 4755 filename
+	
+	i-node, describe meta information about a file
+		- including type, permission, data blocks, timestamps, reference counts, etc.
+		- 0, reserved or does not exist; 1, list of bad blocks; 2, root directory of a partition
+Ch6 - System Data Files and Infromation
+Ch7 - Process Environment
+Ch8 - Process Control
+Ch9 - Process Relationships
