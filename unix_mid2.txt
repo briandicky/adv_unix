@@ -69,7 +69,91 @@ Ch4 - File and Directories
 		-	minor device number, identifies the specific sub device
 	
 Ch6 - System Data Files and Infromation
-
+	/etc/passwd file, encrypted passwords are stored here.
+	/etc/shadow file, move the encrypted password into here which is only readable by system admin.
+	
+	crypt(3), it encrypted passwords
+		-	salt + encrypted password
+		-	algo + salt + encrypted password
+		- 	algo, such as DES, MD5m SHA256, SHA512
+		-	char *crypt(const char *key, const char *salt)
+		-	have to link with the crypt library, -lcrpyt
+	
+	time rountines,
+		-	time(2)
+		-	gettimeofday(2)
+		-	gmtime(3)
+		-	localtime(3)
+		-	asctime()
+		-	ctime()
+		-	mktime()
+		-	strftime(3)
+	
 Ch7 - Process Environment
+	int main(int argc, char *argv[], char *envp[]);
+	
+	normal process terminate in
+		Normal
+		-	return from main
+		-	calling exit
+		-	calling _exit or _Exit
+		-	return of the last thread from its start routine
+		-	calling pthread_exit form the last thread
+		Abnormal
+		-	calling abort
+		-	receipt of a signal
+		-	 response of the last thread to a cancellation request
+		
+	exit v.s. return
+	-	在main()裡面return，跟在main()裡面呼叫system call exit()是唯一兩者效果相同的地方，兩者的效果均為結束process。
+	-	在main以外的函式裡呼叫return，local variables會從stack裡消失，返回呼叫此函式的地方。若呼叫exit，則該process就此結束、不會返回。
+	
+	process, a program in execution
+		-	stack(local var * function call pointer)
+			heap(dynamic allocated var)
+			.bss(uninitialized)
+			.data(initialized)
+			.txt(code)
+	
+	share library: remove the common library routines from the executable file
+		-	reduce the size and mem requirement of each exe file
+		-	easy to be replaced with new version library functions
+		
+	library injection: functions referenced to shared library can be overridden
+	
+	Memory allocation:
+		-	void *malloc(size_t size); allocate a specific number of bytes of memory
+		-	void *calloc(size_t nobj, size_t size); allocate spze foe a specific number of objects of a specific size, and initialized to 0
+		-	void *realloc(void *ptr, size_t size); increases or decreases the size of a previously allocated area
+		
+	sbrk(2), it expands the heap of the process.
+	
+	void *alloca(size_t size); it allocates memory in stack frames of the current function call.
+		-	pros, might be faster than malloc, no need to free, easier to work with setjmp/longjmp
+		-	cons, portability
+		
+	setjmp, it set the jump back postion
+		-	int setjmp(jmp_buf env);
+		-	env is a global var, has to be accessed from both the setjmp side & longjmp side
+		-	return: 0 if called directly, or nonzero if returning from a longjmp call.
+		
+	longjmp, jump to the position of entry point that setjmp set
+		-	void longjmp(jmp_buf env, int val);
+		-	val = 0, it will be replaced by 1
+	
+	type of variables,
+		-	auto, the default
+		-	register, store in register if possible
+		-	volatile, store in memory
+		
+	restoration of variables,
+		-	auto var, it depends on compiler implementations
+		-	register var, it is restored the value before calling setjmp
+		-	volatile var, it is restored the value before calling longjmp
+		-	No optimiztion, gcc placed everthing in memory
+		-	Full optimiztion, auto/register var are placed in registers
+	
 Ch8 - Process Control
+	
+	
 Ch9 - Process Relationships
