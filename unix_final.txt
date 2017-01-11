@@ -1,0 +1,92 @@
+#Reetrant v.s Thread-safe
+	- Thread-safe, it only manipulates shared data structures in a manner that guarantees safe execution by multiple threads at the same time.
+	- Reetrant, it can be interrupted at any point during its execution and then safely called again ("re-entered") before its previous invocations complete execution.
+
+	Hence, a thread-safe function is always reentrant, but a reentrant function is not always thread-safe.
+	The key for avoiding confusion is that reentrant refers to only one thread executing.
+	It is a concept from the time when no multitasking operating systems existed.
+	
+	Example 1: not thread-safe, not reentrant
+	/* As this function uses a non-const global variable without
+	   any precaution, it is neither reentrant nor thread-safe. */
+
+	int t;
+
+	void swap(int *x, int *y)
+	{
+		t = *x;
+		*x = *y;
+		*y = t;
+	}
+	
+	Example 2: thread-safe, not reentrant
+	/* We use a thread local variable: the function is now
+	   thread-safe but still not reentrant (within the
+	   same thread). */
+
+	__thread int t;
+
+	void swap(int *x, int *y)
+	{
+		t = *x;
+		*x = *y;
+		*y = t;
+	}
+	
+	Example 3: not thread-safe, reentrant
+	/* We save the global state in a local variable and we restore
+	   it at the end of the function.  The function is now reentrant
+	   but it is not thread safe. */
+
+	int t;
+
+	void swap(int *x, int *y)
+	{
+		int s;
+		s = t;
+		t = *x;
+		*x = *y;
+		*y = t;
+		t = s;
+	}
+	
+	Example 4: thread-safe, reentrant
+	/* We use a local variable: the function is now
+	   thread-safe and reentrant, we have ascended to
+	   higher plane of existence.  */
+
+	void swap(int *x, int *y)
+	{
+		int t;
+		t = *x;
+		*x = *y;
+		*y = t;
+	}
+	
+#Lock problem
+	int pthread_atfork(void (*prepare)(void), void (*parent)(void), void (*child)(void));
+	- The pthread_atfork() function shall declare fork handlers to be called before and after fork(), 
+	- The prepare fork handler shall be called before fork() processing commences.
+	- The parent fork handle shall be called after fork() processing completes in the parent process.
+	- The child fork handler shall be called after fork() processing completes in the child process.
+	
+#Log file rotation
+	- logrotate  is  designed to ease administration of systems that generatelarge numbers of log files.
+	It allows automatic rotation, compression, removal, and mailing of log files.
+	Each log file may be handled daily, weekly, monthly, or when it grows too large.
+	
+#isatty(), ttyname(), ctermid()
+
+#bash
+
+#Deadlock avoidence
+
+#syslog
+
+#advisory lock v.s. mandatory lock
+
+#three threads handled SIGINT, SIGTERM, SIGUSER1
+
+#sleep for a specified number of microseconds, by using select & poll
+
+#use a single timer, either alarm or setitimer, to implement a set of functions that enable a process to set and clear any number of timers.
