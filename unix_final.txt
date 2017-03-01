@@ -71,19 +71,39 @@
 	- The child fork handler shall be called after fork() processing completes in the child process.
 	
 #Log file rotation
-	- logrotate  is  designed to ease administration of systems that generatelarge numbers of log files.
-	It allows automatic rotation, compression, removal, and mailing of log files.
-	Each log file may be handled daily, weekly, monthly, or when it grows too large.
+	- logrotate is designed to ease administration of systems that generatelarge numbers of log files.
+		It allows automatic rotation, compression, removal, and mailing of log files.
+		Each log file may be handled daily, weekly, monthly, or when it grows too large.
 	
 #isatty(), ttyname(), ctermid()
-
-#bash
+	- isatty(), test whether a file descriptor refers to a terminal.
+		The isatty() function tests whether fd is an open file descriptor referring to a terminal.
+	- ttyname(), return name of a terminal
+		The function ttyname() returns a pointer to the null-terminated pathname of the terminal device that is open on the file descriptor fd, 
+		or NULL on error (for example, if fd is not connected to a terminal).
+	- ctermid(), get controlling terminal name.
+		ctermid() returns a string which is the pathname for the current controlling terminal for this process.
 
 #Deadlock avoidence
+	- mutual exclusion
+	- hold and wait
+	- no preemption
+	- circular wait
 
 #syslog
+	- send messages to the system logger
+	- closelog() closes the file descriptor being used to write to the system logger. 
+	- openlog() opens a connection to the system logger for a program.
+	- The use of closelog() & openlog() are optional.
 
+#bash
+	- bash myscript.sh, which executes script using bash command
+	- bash -c, if the -c option is present, then commands are read from the first non-option argument command_string
+	
 #advisory lock v.s. mandatory lock
+	- advisory lock, all process have to follow the same procedures to access protected files, such as lock -> read/write -> unlock.
+		if there is a process does not follow the procedure, it could break the protection.
+	- mandatory lock, once a process has locked a file, read/write access to the file may be not granted, even if a process does not not call lock/unlock routines before read/write.
 
 #three threads handled SIGINT, SIGTERM, SIGUSER1
 
